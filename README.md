@@ -109,6 +109,13 @@ Features
 * Supports streaming audio (e.g. "Play 106.1")
 * Supports asking questions while streaming audio playing - stream resumes after response
 
+Instructions and Usage
+======================
+
+* Replace cloned version of creds.py with your known-good credentials file
+* Optionally add execute permissions to alexa-mplayer2.py
+
+$ sudo ./alexa-mplayer2.py   # accessing /dev/input/event* needs root
 
 Future work
 ===========
