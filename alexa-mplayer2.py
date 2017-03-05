@@ -260,6 +260,9 @@ def stop_active_stream():
     time.sleep(.1)
 
 def play_stream_url(url):
+    '''
+    play_stream_url supports URL and local filesystem paths as input
+    '''
     global streamPlaying
     if streamPlaying:
         stop_active_stream()
@@ -277,6 +280,9 @@ if __name__ == '__main__':
         exit(1)
 
     token = gettoken()
+
+    ''' say hello! '''
+    play_stream_url('./hello.mp3')
 
     recording = None
     if len(sys.argv) == 2:
