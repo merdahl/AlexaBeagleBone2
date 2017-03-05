@@ -164,9 +164,30 @@ these JSON functions should be replaced with Python's native JSON abilities, if
 possible
 '''
 def process_json_resp(json_r):
+    resp = json.loads(json_r)
+
+    # empty directives received when you say "stop"
+    if not resp['messageBody']['directives']:
+        stop_active_stream(clear_url=True)
+        return
+
+    '''
+    This is very messy - there has to be a better way without jumping
+    straight to looking for presence of payload tokens
+    '''
+    for d in resp['messageBody']['directives']:
+        if 'Speaker' in d['namespace']:
+            if 'SetVolume' in d['name']:
+                if 'volume' in d['payload']:
+                    v = d['payload']['volume']
+                    mode = d['payload']['adjustmentType']
+                    mp_adjust_volume(mode, float(v))
+
     if debug:
+        print "***************** Begin Debug ***************"
         print("{}JSON String Returned:{} {}".format(bcolors.OKBLUE,
             bcolors.ENDC, json.dumps(json.loads(json_r), indent=2)))
+        print "***************** End Debug ***************"
     
     ''' do we have a streaming media url in the response '''
     if "streamUrl" in json_r:
@@ -188,6 +209,25 @@ def json_integer_value(json_r, item):
         return int(m.group(0))
     else:
         return ""
+
+def mp_adjust_volume(mode="relative", nv=-10.0):
+    '''
+    supported volume adjustment modes:
+    relative : adjust in positive or negative increments
+    absolute : set volume absolute value (0 - 100)
+               (tell Alexa volume 0-10 however)
+    '''
+
+    cv = mplayer.p_volume
+    if cv is not None:
+        if 'relative' in mode:
+            mplayer.p_volume += nv
+        elif 'absolute' in mode:
+            mplayer.p_volume = nv
+        else:
+            print "Unsupported volume adjustment mode: ", mode
+
+    if debug: print "New volume: ", mplayer.p_volume
 
 def play_response(raw_mp3):
     '''
@@ -235,10 +275,14 @@ def play_response(raw_mp3):
     if wasStreaming is True:
         resume_stream_url()
 
-def stop_active_stream():
+def stop_active_stream(clear_url=False):
     global streamPlaying 
     streamPlaying = False
     mplayer.stop()
+
+    if clear_url is True:
+        global streamUrl
+        streamUrl = ""
     time.sleep(.1)
 
 def play_stream_url(url):
