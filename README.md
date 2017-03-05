@@ -117,13 +117,6 @@ Instructions and Usage
 
 $ sudo ./alexa-mplayer2.py   # accessing /dev/input/event* needs root
 
-Checking Internet Connection...
-Connection OK
-Waiting to Record...  <press key while recording>
-Recording
-streamUrl: http://kbks-fm.akacast.iheart.com/...
-Waiting to Record...  <ready for next command>
-
 Future work
 ===========
 
