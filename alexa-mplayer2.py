@@ -13,6 +13,7 @@ import subprocess
 import sys
 import time
 
+from amzn import *
 from creds import *
 from memcache import Client
 
@@ -105,29 +106,10 @@ def gettoken():
 def alexa(recording):
     url = 'https://access-alexa-na.amazon.com/v1/avs/speechrecognizer/recognize'
     headers = {'Authorization' : 'Bearer %s' % gettoken()}
-    d = {
-        "messageHeader": {
-            "deviceContext": [
-                {
-                    "name": "playbackState",
-                    "namespace": "AudioPlayer",
-                    "payload": {
-                        "streamId": "",
-                        "offsetInMilliseconds": "0",
-                        "playerActivity": "IDLE"
-                    }
-                }
-            ]
-        },
-        "messageBody": {
-            "profile": "alexa-close-talk",
-            "locale": "en-us",
-            "format": "audio/L16; rate=16000; channels=1"
-        }
-    }
+
     with open(recording) as inf:
         files = [
-                ('file', ('request', json.dumps(d), 'application/json; charset=UTF-8')),
+                ('file', ('request', json.dumps(avsRequestHeader), 'application/json; charset=UTF-8')),
                 ('file', ('audio', inf, 'audio/L16; rate=16000; channels=1'))
                 ]   
         r = requests.post(url, headers=headers, files=files)
