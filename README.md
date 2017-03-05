@@ -109,6 +109,73 @@ Features
 * Supports streaming audio (e.g. "Play 106.1")
 * Supports asking questions while streaming audio playing - stream resumes after response
 
+Instructions and Usage
+======================
+
+* Replace cloned version of creds.py with your known-good credentials file
+* Optionally add execute permissions to alexa-mplayer2.py
+
+$ sudo ./alexa-mplayer2.py   # accessing /dev/input/event* needs root
+
+Checking Internet Connection...
+Connection OK
+Waiting to Record...  <press key while recording>
+Recording
+JSON String Returned: {
+  "messageBody": {
+    "directives": [
+      {
+        "namespace": "Speaker", 
+        "name": "SetMute", 
+        "payload": {
+          "mute": false
+        }
+      }, 
+      {
+        "namespace": "SpeechSynthesizer", 
+        "name": "speak", 
+        "payload": {
+          "contentIdentifier": "", 
+          "audioContent": ""
+        }
+      }, 
+      {
+        "namespace": "Speaker", 
+        "name": "SetMute", 
+        "payload": {
+          "mute": false
+        }
+      }, 
+      {
+        "namespace": "AudioPlayer", 
+        "name": "play", 
+        "payload": {
+          "playBehavior": "REPLACE_PREVIOUS", 
+          "audioItem": {
+            "streams": [
+              {
+                "progressReport": {
+                  "progressReportDelayInMilliseconds": 0, 
+                  "progressReportIntervalInMilliseconds": 60000
+                }, 
+                "streamUrl": "http://kbks-fm.akacast.iheart.com...", 
+                "offsetInMilliseconds": 0, 
+                "expiryTime": "2017-03-05T19:18:01+0000", 
+                "streamId": "", 
+                "progressReportRequired": true
+              }
+            ], 
+            "audioItemId": ""
+          }, 
+          "navigationToken": ""
+        }
+      }
+    ]
+  }, 
+  "messageHeader": {}
+}
+streamUrl: http://kbks-fm.akacast.iheart.com/...
+Waiting to Record...  <ready for next command>
 
 Future work
 ===========
