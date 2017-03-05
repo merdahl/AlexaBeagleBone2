@@ -121,59 +121,6 @@ Checking Internet Connection...
 Connection OK
 Waiting to Record...  <press key while recording>
 Recording
-JSON String Returned: {
-  "messageBody": {
-    "directives": [
-      {
-        "namespace": "Speaker", 
-        "name": "SetMute", 
-        "payload": {
-          "mute": false
-        }
-      }, 
-      {
-        "namespace": "SpeechSynthesizer", 
-        "name": "speak", 
-        "payload": {
-          "contentIdentifier": "", 
-          "audioContent": ""
-        }
-      }, 
-      {
-        "namespace": "Speaker", 
-        "name": "SetMute", 
-        "payload": {
-          "mute": false
-        }
-      }, 
-      {
-        "namespace": "AudioPlayer", 
-        "name": "play", 
-        "payload": {
-          "playBehavior": "REPLACE_PREVIOUS", 
-          "audioItem": {
-            "streams": [
-              {
-                "progressReport": {
-                  "progressReportDelayInMilliseconds": 0, 
-                  "progressReportIntervalInMilliseconds": 60000
-                }, 
-                "streamUrl": "http://kbks-fm.akacast.iheart.com...", 
-                "offsetInMilliseconds": 0, 
-                "expiryTime": "2017-03-05T19:18:01+0000", 
-                "streamId": "", 
-                "progressReportRequired": true
-              }
-            ], 
-            "audioItemId": ""
-          }, 
-          "navigationToken": ""
-        }
-      }
-    ]
-  }, 
-  "messageHeader": {}
-}
 streamUrl: http://kbks-fm.akacast.iheart.com/...
 Waiting to Record...  <ready for next command>
 
