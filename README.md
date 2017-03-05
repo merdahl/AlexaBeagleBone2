@@ -28,6 +28,8 @@ over to Yocto filesystem and add instructions for building dependencies.
 The following information below is a collection of my own notes, and hopefully
 is complete.
 
+Note: credentials file is missing - add creds.py
+
 Adding Required Linux System Libraries
 --------------------------------------
 
@@ -111,6 +113,7 @@ Features
 Future work
 ===========
 
+* Use YAML for configuration and holding credentials
 * Add volume controls (mute, absolute and relative)
 * Add "stop" support for steaming audio
 * Add support for GPIO triggering (keyboard adds latency due to key repeats)
