@@ -121,8 +121,6 @@ Future work
 ===========
 
 * Use YAML for configuration and holding credentials
-* Add volume controls (mute, absolute and relative)
-* Add "stop" support for steaming audio
 * Add support for GPIO triggering (keyboard adds latency due to key repeats)
 * Add support for hands free voice triggering (already have a prototype working)
 * Support overlaying primary and secondary audio streams (simultaneous playback)
