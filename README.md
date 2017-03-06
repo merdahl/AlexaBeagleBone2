@@ -143,7 +143,8 @@ Instructions and Usage
 * Replace cloned version of creds.py with your known-good credentials file
 * Optionally add execute permissions to alexa-mplayer2.py
 
-$ sudo ./alexa-mplayer2.py   # accessing /dev/input/event* needs root
+	$ ./alexa-mplayer2.py
+
 
 Note: voice triggering is currenting the default interface to AVS.  Going back to a key
 press event currently only requires uncommenting the alsabuttonrecord call in main().
