@@ -32,8 +32,6 @@ over to Yocto filesystem and add instructions for building dependencies.
 The following information below is a collection of my own notes, and hopefully
 is complete.
 
-Note: credentials file is missing - add creds.py
-
 Adding Required Linux System Libraries
 --------------------------------------
 
@@ -113,12 +111,12 @@ I stripped out the basics from the AlexaPi project to get PocketSphinx working
 with this project.  To install the Python package for PocketSphinx, first 
 install the dependencies (these were what was missing on my system):
 
-	$ sudo apt-get install swig
-	$ sudo apt-get install libpulse-dev
-
+	$ sudo apt-get install swig libpulse-dev
+	
+	# --no-cache-dir helped turn up above dependenices for pocketsphinx
 	$ sudo pip --no-cache-dir install --upgrade pocketsphinx
 
-	$ pip install webrtcvad
+	$ sudo pip install webrtcvad
 
 Freeing space on eMMC
 =====================
