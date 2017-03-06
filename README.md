@@ -1,8 +1,7 @@
-Changes and improvements from AlexaBeagleBone
-=============================================
+# Changes and improvements from AlexaBeagleBone
 
 Dependency on VLC has been removed.  VLC is great, however on the BeagleBone
-Black, it is a bit overkill, and is difficult to build from source if you're on
+Black, it is difficult to build from source if you're on
 Yocto filesystem (such as the TI Linux Processor SDK).  Mplayer is another
 capable media player available on ARM Linux, low CPU usage, and builds natively
 on TI ARM platforms running a recent Yocto filesystem without much fuss
@@ -17,8 +16,7 @@ Voice triggering is also now supported using PocketSphinx.  Other voice triggeri
 libraries will be tested as well.  CPU usage seems reasonable, even while
 streaming audio and performing a voice triggering session.
 
-Build Instructions
-==================
+# Build Instructions
 
 For now things are not terribly user friendly, and are more focused towards my
 own development.  Probably the most ornerious task will be creating an AVS
@@ -32,8 +30,7 @@ over to Yocto filesystem and add instructions for building dependencies.
 The following information below is a collection of my own notes, and hopefully
 is complete.
 
-Adding Required Linux System Libraries
---------------------------------------
+## Adding Required Linux System Libraries
 
 Begin with updating apt
 
@@ -64,8 +61,7 @@ keyboard for initiating a voice recording
 
     $ sudo apt-get install evtest
 
-Adding Python Packages
-----------------------
+## Adding Python Packages
 
 Install PIP to install python package dependencies.  Using 'get-pip' script
 because this will be used on Yocto builds too.
@@ -104,8 +100,7 @@ Install Python package wrapper dependencies
 
     $ sudo pip install pyalsaaudio memcached
 
-Optional Voice Triggering
--------------------------
+## Optional Voice Triggering
 
 I stripped out the basics from the AlexaPi project to get PocketSphinx working
 with this project.  To install the Python package for PocketSphinx, first 
@@ -118,27 +113,24 @@ install the dependencies (these were what was missing on my system):
 
 	$ sudo pip install webrtcvad
 
-Freeing space on eMMC
-=====================
+# Freeing space on eMMC
 
 You might be ruinng low on eMMC space.  I removed several things, including the 
-Chromium browser package.
+Chromium browser package (please use care when deleting things!).
 
 On Debian systems, you can use dpkg to see who are taking the most space:
 
 	$ dpkg-query -Wf '${Installed-Size}\t${Package}\n' | sort -n
     
 
-Features
-========
+# Features
 
 * Supports voice triggering (PocketSphinx)
 * Supports using /dev/input device to initiate voice recording from ALSA input device
 * Supports streaming audio (e.g. "Play 106.1")
 * Supports asking questions while streaming audio playing - stream resumes after response
 
-Instructions and Usage
-======================
+# Instructions and Usage
 
 * Replace cloned version of creds.py with your known-good credentials file
 * Optionally add execute permissions to alexa-mplayer2.py
@@ -151,9 +143,9 @@ press event currently only requires uncommenting the alsabuttonrecord call in ma
 Right now I do not support multiple triggering mechanisms.  In the future, the triggering 
 and utterance recording mechanisms will be separated.
 
-Future work
-===========
+# Future work
 
 * Use YAML for configuration and holding credentials
 * Add support for GPIO triggering (keyboard adds latency due to key repeats)
+* Selection of triggering method (keyboard/ GPIO/ voice) configurable
 * Support overlaying primary and secondary audio streams (simultaneous playback)
