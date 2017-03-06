@@ -13,6 +13,10 @@ Mplayer can be put into slave mode and controlled through special files (fifo).
 The pymplb wrapper by Stefan Parviainen is a clean and elegant solution for
 programatically controlling Mplayer from Python.
 
+Voice triggering is also now supported using PocketSphinx.  Other voice triggering
+libraries will be tested as well.  CPU usage seems reasonable, even while
+streaming audio and performing a voice triggering session.
+
 Build Instructions
 ==================
 
@@ -142,6 +146,11 @@ Instructions and Usage
 * Optionally add execute permissions to alexa-mplayer2.py
 
 $ sudo ./alexa-mplayer2.py   # accessing /dev/input/event* needs root
+
+Note: voice triggering is currenting the default interface to AVS.  Going back to a key
+press event currently only requires uncommenting the alsabuttonrecord call in main().
+Right now I do not support multiple triggering mechanisms.  In the future, the triggering 
+and utterance recording mechanisms will be separated.
 
 Future work
 ===========
