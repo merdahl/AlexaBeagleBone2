@@ -3,18 +3,20 @@
 Dependency on VLC has been removed.  VLC is great, however on the BeagleBone
 Black, it is difficult to build from source if you're on
 Yocto filesystem (such as the TI Linux Processor SDK).  Mplayer is another
-capable media player available on ARM Linux, low CPU usage, and builds natively
-on TI ARM platforms running a recent Yocto filesystem without much fuss
-(probably the case with other platforms, but I've only worked with TI
-processors).
+capable media player available on ARM Linux, consumes low CPU resources 
+while streaming audio, and builds natively on TI ARM platforms running a 
+recent Yocto filesystem without much fuss (probably the case with other 
+platforms, but I've only worked with TI processors).
 
 Mplayer can be put into slave mode and controlled through special files (fifo).
 The pymplb wrapper by Stefan Parviainen is a clean and elegant solution for
 programatically controlling Mplayer from Python.
 
-Voice triggering is also now supported using PocketSphinx.  Other voice triggering
-libraries will be tested as well.  CPU usage seems reasonable, even while
-streaming audio and performing a voice triggering session.
+Voice triggering is now supported using PocketSphinx.  The trigger word is "Pal".
+Fans of the movie "Uncle Buck" might see the humor in using that name.
+Other voice triggering libraries will be tested as well.  CPU usage seems 
+reasonable, even while streaming audio and performing a voice triggering 
+session.
 
 # Build Instructions
 
@@ -145,7 +147,6 @@ and utterance recording mechanisms will be separated.
 
 # Future work
 
-* Use YAML for configuration and holding credentials
+* Use YAML for configuration and holding credentials, trigger source, trigger word, etc
 * Add support for GPIO triggering (keyboard adds latency due to key repeats)
-* Selection of triggering method (keyboard/ GPIO/ voice) configurable
 * Support overlaying primary and secondary audio streams (simultaneous playback)
