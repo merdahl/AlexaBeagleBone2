@@ -27,7 +27,8 @@ ps_config.set_string('-hmm', os.path.join(get_model_path(), 'en-us'))
 ps_config.set_string('-dict', os.path.join(get_model_path(), 'cmudict-en-us.dict'))
 
 #Specify recognition key phrase
-ps_config.set_string('-keyphrase', 'pal')
+trigger_phrase = "pal"
+ps_config.set_string('-keyphrase', trigger_phrase)
 ps_config.set_float('-kws_threshold',1e-5)
 
 # Hide the VERY verbose logging information
@@ -104,7 +105,7 @@ def silence_listener(throwaway_frames, filename="./recording.wav"):
         if (numSilenceRuns != 0) and ((silenceRun * VAD_FRAME_MS) > VAD_SILENCE_TIMEOUT):
             thresholdSilenceMet = True
 
-    if debug: print ("Debug: End recording")
+    if debug: print ("End recording")
 
     rf = open(filename, 'w')
     rf.write(audio)
@@ -133,6 +134,7 @@ def voice_trigger_record(filename="./recording.wav"):
         time.sleep(.1)
 
         triggered = False
+        buf = ""
         # Process microphone audio via PocketSphinx, listening for trigger word
         while not triggered:
             # Read from microphone
@@ -140,14 +142,17 @@ def voice_trigger_record(filename="./recording.wav"):
             # Detect if keyword/trigger word was said
             decoder.process_raw(buf, False, False)
 
-            triggered_by_voice = decoder.hyp() is not None
+            hypothesis = decoder.hyp()
+            if hypothesis:
+                if debug:
+                    print ('Best hypothesis: ', hypothesis.hypstr, " model score: ", hypothesis.best_score, " confidence: ", hypothesis.prob)
 
-            triggered = triggered_by_voice
-
+                if hypothesis.hypstr == trigger_phrase:
+                    triggered = True
         record_audio = True
 
-        if triggered_by_voice:
-            if debug: print "Got trigger!"
+        if triggered:
+            if debug: print "Got voice trigger!"
 
     # To avoid overflows close the microphone connection
     inp.close()
