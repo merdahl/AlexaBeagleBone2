@@ -76,6 +76,7 @@ path = os.path.realpath(__file__).rstrip(os.path.basename(__file__))
 global mplayer instance
 '''
 mplayer = pymplb.MPlayer()
+mplayer_avs = pymplb.MPlayer() # player just for AVS responses
 
 def internet_on():
     print("Checking Internet Connection...")
@@ -219,6 +220,11 @@ def mp_adjust_volume(mode="relative", nv=-10.0):
     relative : adjust in positive or negative increments
     absolute : set volume absolute value (0 - 100)
                (tell Alexa volume 0-10 however)
+
+    Unfortunately with adding another mplayer dedicated to AVS responses,
+    things just got a bit more complicated, and now will be forced to make
+    volume changes at the ALSA layer, where they should have been done in
+    the first place.  This is TODO
     '''
 
     cv = mplayer.p_volume
@@ -241,16 +247,18 @@ def play_response(raw_mp3):
         f.write(raw_mp3)
 
     '''
-    Must stop currently playing audio - cannot yet play over an existing stream.
-    Not sure if mplayer is hogging the alsa device, or if there is something 
-    else at work.
+    With some dmix magic in /etc/asound.conf, we are able to play
+    the AVS response over the top of a currently playin stream
+    https://discuss.mopidy.com/t/setting-up-c-media-usb-headphone-set-in-mixer-mode/1409/3
     '''
     wasStreaming = False
     if streamPlaying is True:
-        stop_active_stream()
+        # stop_active_stream()
+        previous_volume = mplayer.p_volume
+        mp_adjust_volume("absolute", 10.0)
         wasStreaming = True
 
-    mplayer.loadfile("response.mp3")
+    mplayer_avs.loadfile("response.mp3")
 
     '''
     Wait for response to be completed before returning
@@ -259,8 +267,8 @@ def play_response(raw_mp3):
     Checking for None right away does not seem to work well - stream may
     not have started yet or may need to prime percent_pos with an initial read
     '''
-    while (mplayer.p_percent_pos < 100.0 and 
-            mplayer.p_percent_pos != None):
+    while (mplayer_avs.p_percent_pos < 100.0 and
+            mplayer_avs.p_percent_pos != None):
         time.sleep(.1)
 
     '''
@@ -276,7 +284,8 @@ def play_response(raw_mp3):
         if you read a wikipedia entry, etc)
     '''
     if wasStreaming is True:
-        resume_stream_url()
+        # resume_stream_url()
+        mp_adjust_volume("absolute", previous_volume)
 
 def stop_active_stream(clear_url=False):
     global streamPlaying 
