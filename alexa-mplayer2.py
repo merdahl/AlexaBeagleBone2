@@ -1,7 +1,8 @@
 #! /usr/bin/env python
 
-import alsaaudio
+print "Loading modules"
 import alsabuttonrecord
+import voicetrigger
 import json
 import os
 import pymplb
@@ -16,6 +17,8 @@ import time
 from amzn import *
 from creds import *
 from memcache import Client
+
+print "Loading modules completed"
 
 """
 Copyright (c) <2016> <Michael Erdahl>
@@ -319,6 +322,7 @@ if __name__ == '__main__':
     else:
         while(1):
             recording = path+'recording.wav'
-            alsabuttonrecord.record(recording)
+            voicetrigger.voice_trigger_record(recording)
+            #alsabuttonrecord.record(recording)
 
             alexa(recording)
