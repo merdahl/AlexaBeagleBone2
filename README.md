@@ -102,9 +102,35 @@ Install Python package wrapper dependencies
 
     $ sudo pip install pyalsaaudio memcached
 
+Optional Voice Triggering
+-------------------------
+
+I stripped out the basics from the AlexaPi project to get PocketSphinx working
+with this project.  To install the Python package for PocketSphinx, first 
+install the dependencies (these were what was missing on my system):
+
+	$ sudo apt-get install swig
+	$ sudo apt-get install libpulse-dev
+
+	$ sudo pip --no-cache-dir install --upgrade pocketsphinx
+
+	$ pip install webrtcvad
+
+Freeing space on eMMC
+=====================
+
+You might be ruinng low on eMMC space.  I removed several things, including the 
+Chromium browser package.
+
+On Debian systems, you can use dpkg to see who are taking the most space:
+
+	$ dpkg-query -Wf '${Installed-Size}\t${Package}\n' | sort -n
+    
+
 Features
 ========
 
+* Supports voice triggering (PocketSphinx)
 * Supports using /dev/input device to initiate voice recording from ALSA input device
 * Supports streaming audio (e.g. "Play 106.1")
 * Supports asking questions while streaming audio playing - stream resumes after response
@@ -122,5 +148,4 @@ Future work
 
 * Use YAML for configuration and holding credentials
 * Add support for GPIO triggering (keyboard adds latency due to key repeats)
-* Add support for hands free voice triggering (already have a prototype working)
 * Support overlaying primary and secondary audio streams (simultaneous playback)
