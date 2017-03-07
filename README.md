@@ -111,6 +111,34 @@ Install Python package wrapper dependencies
 
 ## Optional Voice Triggering
 
+### KITT.AI snowboy
+
+Snowboy is promising because we are going for a more targeted approach for
+the wake word, which is fine.  We don't necessarily need an entire natural
+language processing library - that's what AVS is for!
+
+We can even define several "trigger words" to embed into the program to trigger
+different actions, whether AVS, or something else on the web or even locally.
+
+#### Install python bindings
+
+Go over to the snowboy page on github for the latest information on installation
+on your system [https://github.com/Kitt-AI/snowboy]
+
+#### Train wake word
+
+Create an account and train your keyword here: [https://snowboy.kitt.ai/dashboard]
+
+Download the model and apply in the AlexaBeagleBone2 resources folder
+
+Included are three models:
+    "Hey Buddy"
+    "Alexa"
+    "Snowboy"
+
+
+### Pocket Sphinx
+
 I stripped out the basics from the AlexaPi project to get PocketSphinx working
 with this project.  To install the Python package for PocketSphinx, first 
 install the dependencies (these were what was missing on my system):

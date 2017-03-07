@@ -1,8 +1,9 @@
 #! /usr/bin/env python
 
 print "Loading modules"
-import alsabuttonrecord
-import voicetrigger
+#import alsabuttonrecord
+#import voicetrigger
+import kittaisb
 import json
 import os
 import pymplb
@@ -312,6 +313,9 @@ def play_stream_url(url):
 def resume_stream_url():
     play_stream_url(streamUrl)
 
+
+	
+
 if __name__ == '__main__':
     if internet_on() == False:
         print("Could not connect to Amazon servers - aborting")
@@ -331,7 +335,9 @@ if __name__ == '__main__':
     else:
         while(1):
             recording = path+'recording.wav'
-            voicetrigger.voice_trigger_record(recording)
+            kittaisb.snowboy_start()
+            kittaisb.record(recording)
+            #voicetrigger.voice_trigger_record(recording)
             #alsabuttonrecord.record(recording)
 
             alexa(recording)
