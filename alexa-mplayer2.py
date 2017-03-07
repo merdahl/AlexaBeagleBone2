@@ -18,6 +18,7 @@ import time
 from amzn import *
 from creds import *
 from memcache import Client
+from threading import Thread
 
 print "Loading modules completed"
 
@@ -156,7 +157,11 @@ def process_response(r):
                     ''' voice response from AVS in mp3 format '''
                     raw_mp3 = d.split('\r\n\r\n')[1].rstrip('--')
                     play_response(raw_mp3)
-                    if len(streamUrl):
+                    if len(streamUrl) and streamPlaying is False:
+                        '''
+                        Telling an existing stream to play again will cause an
+                        audible glitch
+                        '''
                         play_stream_url(streamUrl)
                 else:
                     print "Unsupported content type: %s" % c_type
@@ -256,7 +261,7 @@ def play_response(raw_mp3):
     if streamPlaying is True:
         # stop_active_stream()
         previous_volume = mplayer.p_volume
-        mp_adjust_volume("absolute", 10.0)
+        mp_adjust_volume("absolute", 5.0)
         wasStreaming = True
 
     mplayer_avs.loadfile("response.mp3")
@@ -298,17 +303,23 @@ def stop_active_stream(clear_url=False):
         streamUrl = ""
     time.sleep(.1)
 
-def play_stream_url(url):
+def play_stream_url(url, streaming=True, player=mplayer):
     '''
     play_stream_url supports URL and local filesystem paths as input
+    url - local or remote audio stream to play (supports mp3, http audio)
+    streaming - True for streaming audio links, False for local mp3 files
+    player - handle to player for request
     '''
     global streamPlaying
     if streamPlaying:
         stop_active_stream()
 
-    mplayer.loadfile(url)
+    player.loadfile(url)
 
-    streamPlaying = True
+    if streaming is True:    
+        streamPlaying = True
+
+    print "**** Stream playing set to True***"
 
 def resume_stream_url():
     play_stream_url(streamUrl)
@@ -324,7 +335,7 @@ if __name__ == '__main__':
     token = gettoken()
 
     ''' say hello! '''
-    play_stream_url('./hello.mp3')
+    play_stream_url('./hello.mp3', streaming=False, player=mplayer_avs)
 
     recording = None
     if len(sys.argv) == 2:

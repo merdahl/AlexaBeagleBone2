@@ -12,11 +12,17 @@ Mplayer can be put into slave mode and controlled through special files (fifo).
 The pymplb wrapper by Stefan Parviainen is a clean and elegant solution for
 programatically controlling Mplayer from Python.
 
-Voice triggering is now supported using PocketSphinx.  The trigger word is "Pal".
-Fans of the movie "Uncle Buck" might see the humor in using that name.
-Other voice triggering libraries will be tested as well.  CPU usage seems 
-reasonable, even while streaming audio and performing a voice triggering 
-session.
+Voice triggering is  supported using PocketSphinx and Kitt.AI Snowboy.  
+The Pocket Sphinx trigger word is "Pal" - fans of the movie "Uncle Buck" might 
+see the humor in using that name.  Kitt.AI is using the trained phrase
+"Hey buddy" at the moment.  Other voice triggering libraries will be tested as 
+well.  
+
+CPU usage seems reasonable, even while streaming audio and performing a 
+voice triggering session.  Right now it looks like about 20-30% CPU utilization
+while streaming audio over WiFi, and waiting for trigger phrase, running at
+600MHz.  Since the AM335x can go up to 1GHz, there is lots of headroom for
+more activities!
 
 Seamless music and AVS responses are now supported.  This scenario arrises
 when a user is playing a streaming audio station, and asks AVS a question.
@@ -120,10 +126,20 @@ language processing library - that's what AVS is for!
 We can even define several "trigger words" to embed into the program to trigger
 different actions, whether AVS, or something else on the web or even locally.
 
+Information in the section is lacking - still learning and will fill in more as
+it comes to me.
+
 #### Install python bindings
 
 Go over to the snowboy page on github for the latest information on installation
 on your system [https://github.com/Kitt-AI/snowboy]
+
+This project also uses the Python package webrtcvad like Pocket Sphinx to while
+recording audio for AVS to detect when speech ends.  Unfortunately it appears
+to not be working at the moment, and seems to be recording to the maximum
+quiet time before giving up, which is currently set at 4 seconds.  I will be 
+working on that to speed up latency for short requests, and not cut off long 
+requests.
 
 #### Train wake word
 
@@ -255,3 +271,5 @@ and utterance recording mechanisms will be separated.
 * Overlaying primary and secondary audio streams (simultaneous playback) requires more work
 * Separate out triggering and audio logic
 * Move global volume control to ALSA layer
+
+"Ever heard of the band 999 MegaBytes?  Probably not, they never made it to a gig" -- Alexa Joke
