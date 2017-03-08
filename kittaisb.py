@@ -28,12 +28,13 @@ speech_filename="recording.wav"
 triggered = False
 
 def snowboy_trigger_callback():
-	global triggered
-	triggered = True
+    global triggered
+    snowboydecoder.play_audio_file()
+    triggered = True
 
 def snowboy_interrupt_check():
-	global triggered
-	return triggered
+    global triggered
+    return triggered
 
 def snowboy_start():
     detector = snowboydecoder.HotwordDetector("./resources/HeyBuddy.pmdl",
@@ -49,7 +50,7 @@ def snowboy_start():
     detector.start(snowboy_trigger_callback, snowboy_interrupt_check, sleep_time=0.03)
 
     global triggered
-    triggered = False	
+    triggered = False
 
     detector.terminate()
 
