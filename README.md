@@ -271,5 +271,6 @@ and utterance recording mechanisms will be separated.
 * Overlaying primary and secondary audio streams (simultaneous playback) requires more work
 * Separate out triggering and audio logic
 * Move global volume control to ALSA layer
+* The two goals above will make it easier to lower volume while a request is being made
 
 "Ever heard of the band 999 MegaBytes?  Probably not, they never made it to a gig" -- Alexa Joke
