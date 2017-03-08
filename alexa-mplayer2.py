@@ -61,10 +61,12 @@ class bcolors:
 debug = True
 streamUrl = ""
 streamPlaying = False
+appRunning = True
 
 # ctrl-c handler
 def signal_handler(signal, frame):
     print "User pressed ctrl-c, exiting\n"
+    appRunning = False # Kills stream maintainer thread
     sys.exit(0)
 
 signal.signal(signal.SIGINT, signal_handler)
@@ -319,13 +321,38 @@ def play_stream_url(url, streaming=True, player=mplayer):
     if streaming is True:    
         streamPlaying = True
 
-    print "**** Stream playing set to True***"
+def streaming_audio_maintainer():
+    '''
+    Sometimes an internet audio stream will just die.  Instead of letting the
+    party die, detect the silence and restart the stream
 
-def resume_stream_url():
-    play_stream_url(streamUrl)
+    This probably isn't very thread safe, and not even sure this will work,
+    this is more or less just a test.
 
-
+    Setting up a state machine would probably be much better - the current
+    architecture is a problem because the main thread is currently blocked on
+    voice detection (perhaps that should be in a thread?)
+    '''
+    counter = 0
+    print "streaming_audio_maintainer started"
+    while(appRunning):
+        if streamPlaying is True:
+            if mplayer.p_volume is None and len(streamUrl):
+                print "*** Restarted stream!"
+                play_stream_url(streamUrl)
+                time.sleep(0.5)
+                counter = counter + 1
+                if counter > 10:
+                    # give up - net may be down
+                    stop_active_stream(clearUrl=True)
+                    print "*** Count not restart stream - net down?"
+            else:
+                counter = 0
+        time.sleep(0.5)
 	
+def spawn_streaming_audio_maintainer_thread():
+    streaming_audio_maintenance_thread = Thread(target=streaming_audio_maintainer)
+    streaming_audio_maintenance_thread.start()        
 
 if __name__ == '__main__':
     if internet_on() == False:
@@ -344,9 +371,10 @@ if __name__ == '__main__':
         alexa(recording)
 
     else:
-        while(1):
+        spawn_streaming_audio_maintainer_thread()
+        while(appRunning):
             recording = path+'recording.wav'
-            kittaisb.snowboy_start()
+            kittaisb.snowboy_start()  # block here until triggered
             kittaisb.record(recording)
             #voicetrigger.voice_trigger_record(recording)
             #alsabuttonrecord.record(recording)
