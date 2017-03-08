@@ -66,6 +66,7 @@ appRunning = True
 # ctrl-c handler
 def signal_handler(signal, frame):
     print "User pressed ctrl-c, exiting\n"
+    global appRunning
     appRunning = False # Kills stream maintainer thread
     sys.exit(0)
 
@@ -125,7 +126,9 @@ def alexa(recording):
     if r:
         process_response(r)
     else:
-        raise RuntimeException("Fatal - did not receive response from AVS")
+        # Need to see why we would get here, other than if the net is down
+        if debug: print "Did not receive a response from AVS"
+        pass
      
 def process_response(r):   
     if r.status_code == 200:
@@ -333,6 +336,7 @@ def streaming_audio_maintainer():
     architecture is a problem because the main thread is currently blocked on
     voice detection (perhaps that should be in a thread?)
     '''
+    global appRunning
     counter = 0
     print "streaming_audio_maintainer started"
     while(appRunning):
@@ -349,6 +353,8 @@ def streaming_audio_maintainer():
             else:
                 counter = 0
         time.sleep(0.5)
+    print "streaming_audio_maintainer stopped"
+    return
 	
 def spawn_streaming_audio_maintainer_thread():
     streaming_audio_maintenance_thread = Thread(target=streaming_audio_maintainer)
