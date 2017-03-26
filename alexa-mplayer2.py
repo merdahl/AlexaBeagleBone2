@@ -63,6 +63,9 @@ streamUrl = ""
 streamPlaying = False
 appRunning = True
 
+responseRequested = False
+responseTimeoutInMillis = 8000 # default
+
 # ctrl-c handler
 def signal_handler(signal, frame):
     print "User pressed ctrl-c, exiting\n"
@@ -157,6 +160,7 @@ def process_response(r):
             if m:
                 c_type = m.group(0)
                 if c_type == 'application/json':
+                    ''' parse and handle json response from AVS '''
                     process_json_resp(d.split('\r\n\r\n')[1].rstrip('\r\n--'))
                 elif c_type == 'audio/mpeg':
                     ''' voice response from AVS in mp3 format '''
@@ -197,6 +201,27 @@ def process_json_resp(json_r):
                     v = d['payload']['volume']
                     mode = d['payload']['adjustmentType']
                     mp_adjust_volume(mode, float(v))
+            if 'SetMute' in d['name']:
+                if 'mute' in d['payload']:
+                    mute = d['payload']['mute']
+                    print "SetMute (not handled)", mute
+        elif 'SpeechSynthesizer' in d['namespace']:
+            if 'speak' in d['name']:
+                if 'audioContent' in d['payload']:
+                    if 'KnowledgePrompt' in d['payload']['audioContent']:
+                        ''' may want to do something here in the future'''
+                        print "We're getting some knowledge dropped on us!"
+                    if 'ask.skill' in d['payload']['audioContent']:
+                        ''' may want to do something here in the future'''
+                        print "Launching ASK Skill"
+        elif 'SpeechRecognizer' in d['namespace']:
+            if 'listen' in d['name']:
+                if 'timeoutIntervalInMillis' in d['payload']:
+                    ''' this should be done after the response have been fully handled '''
+                    global responseRequested
+                    global responseTimeoutInMillis
+                    responseRequested = True
+                    responseTimeoutInMillis = int(d['payload']['timeoutIntervalInMillis'])
 
     if debug:
         print "***************** Begin Debug ***************"
@@ -281,6 +306,19 @@ def play_response(raw_mp3):
     while (mplayer_avs.p_percent_pos < 100.0 and
             mplayer_avs.p_percent_pos != None):
         time.sleep(.1)
+
+    '''
+    If alexa is waiting for a response to the previous query, record and send
+    to AVS
+    '''
+    global responseRequested
+    if responseRequested is True:
+        responseRequested = False
+        print "Response is requested"
+        print("Listening (timeout = {} milliseconds)".format(responseTimeoutInMillis))
+        recording = path + 'response.wav'
+        kittaisb.record(recording, throwaway_frames=0, timeout=(responseTimeoutInMillis-1000)/1000)
+        alexa(recording)
 
     '''
     making the assumption we want to resume the stream after asking a question
