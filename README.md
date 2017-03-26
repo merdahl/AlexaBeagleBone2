@@ -178,10 +178,12 @@ On Debian systems, you can use dpkg to see who are taking the most space:
 
 # Features
 
+* Supports hot phrase detection (Kitt.AI snowboy)
 * Supports voice triggering (PocketSphinx)
 * Supports using /dev/input device to initiate voice recording from ALSA input device
 * Supports streaming audio (e.g. "Play 106.1")
 * Supports asking questions while streaming audio playing - stream resumes after response
+* Supports Alexa Skills Kit using natural language responses
 
 # Configuring ALSA
 
