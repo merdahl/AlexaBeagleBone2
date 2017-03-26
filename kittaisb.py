@@ -8,8 +8,8 @@ import signal
 
 debug = True
 
-# determine what this setup is, and see if it makes sense
-vad = webrtcvad.Vad(2)
+# Set silence detection agressiveness to maximum
+vad = webrtcvad.Vad(3)
 
 # constants 
 alsa_card = 'plughw:CARD=Device'
@@ -56,7 +56,7 @@ def snowboy_start():
 
     if debug: print "Snowboy detector finished"
 
-def record(filename, throwaway_frames=VAD_THROWAWAY_FRAMES):
+def record(filename, throwaway_frames=VAD_THROWAWAY_FRAMES, timeout=MAX_RECORDING_LENGTH):
     '''
     Begin recording once speech is detected, then stop recording when silence
     is detected.
@@ -82,23 +82,23 @@ def record(filename, throwaway_frames=VAD_THROWAWAY_FRAMES):
         l, data = inp.read()
         frames = frames + 1
         if l:
-            audio += data
             isSpeech = vad.is_speech(data, VAD_SAMPLERATE)
+            if isSpeech is True:
+                audio += data
     
     if debug: print "Recording speech"
 
     # now do VAD
-    while (thresholdSilenceMet == False) and ((time.time() - start) < MAX_RECORDING_LENGTH):
+    while (thresholdSilenceMet == False) and ((time.time() - start) < timeout):
         l, data = inp.read()
         if l:
-            audio += data
-
             if (l == VAD_PERIOD):
                 isSpeech = vad.is_speech(data, VAD_SAMPLERATE)
 
                 if (isSpeech == False):
                     silenceRun = silenceRun + 1
                 else:
+                    audio += data
                     detectedSpeech = True
                     silenceRun = 0
                     numSilenceRuns = numSilenceRuns + 1
