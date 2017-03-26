@@ -39,7 +39,7 @@ def snowboy_interrupt_check():
 def snowboy_start():
     detector = snowboydecoder.HotwordDetector("./resources/HeyBuddy.pmdl",
             sensitivity=0.5, audio_gain=1)
-	
+    
     '''
     snowboy_trigger_callback will be called when the trigger phrase is detected
     snowboy_interrupt_check will be called every (sleep_time) seconds to
@@ -57,76 +57,76 @@ def snowboy_start():
     if debug: print "Snowboy detector finished"
 
 def record(filename, throwaway_frames=VAD_THROWAWAY_FRAMES):
-	'''
-	Begin recording once speech is detected, then stop recording when silence
-	is detected.
-	'''
-	inp = alsaaudio.PCM(alsaaudio.PCM_CAPTURE, alsaaudio.PCM_NORMAL, alsa_card)
-	inp.setchannels(VAD_CHANNELS)
-	inp.setrate(VAD_SAMPLERATE)
-	inp.setformat(alsaaudio.PCM_FORMAT_S16_LE)
-	inp.setperiodsize(VAD_PERIOD)
-	audio = ""
+    '''
+    Begin recording once speech is detected, then stop recording when silence
+    is detected.
+    '''
+    inp = alsaaudio.PCM(alsaaudio.PCM_CAPTURE, alsaaudio.PCM_NORMAL, alsa_card)
+    inp.setchannels(VAD_CHANNELS)
+    inp.setrate(VAD_SAMPLERATE)
+    inp.setformat(alsaaudio.PCM_FORMAT_S16_LE)
+    inp.setperiodsize(VAD_PERIOD)
+    audio = ""
 
     # Buffer as long as we haven't heard enough silence or the total size is within max size
-	thresholdSilenceMet = False
-	detectedSpeech = False
-	frames = 0
-	numSilenceRuns = 0
-	silenceRun = 0
-	start = time.time()
-	lastSilenceThresholdMet = 0.0
+    thresholdSilenceMet = False
+    detectedSpeech = False
+    frames = 0
+    numSilenceRuns = 0
+    silenceRun = 0
+    start = time.time()
+    lastSilenceThresholdMet = 0.0
 
     # do not count first 10 frames when doing VAD
-	while (frames < throwaway_frames): # VAD_THROWAWAY_FRAMES):
-		l, data = inp.read()
-		frames = frames + 1
-		if l:
-			audio += data
-			isSpeech = vad.is_speech(data, VAD_SAMPLERATE)
-	
-	if debug: print "Recording speech"
+    while (frames < throwaway_frames): # VAD_THROWAWAY_FRAMES):
+        l, data = inp.read()
+        frames = frames + 1
+        if l:
+            audio += data
+            isSpeech = vad.is_speech(data, VAD_SAMPLERATE)
+    
+    if debug: print "Recording speech"
 
     # now do VAD
-	while (thresholdSilenceMet == False) and ((time.time() - start) < MAX_RECORDING_LENGTH):
-		l, data = inp.read()
-		if l:
-			audio += data
+    while (thresholdSilenceMet == False) and ((time.time() - start) < MAX_RECORDING_LENGTH):
+        l, data = inp.read()
+        if l:
+            audio += data
 
-			if (l == VAD_PERIOD):
-				isSpeech = vad.is_speech(data, VAD_SAMPLERATE)
+            if (l == VAD_PERIOD):
+                isSpeech = vad.is_speech(data, VAD_SAMPLERATE)
 
                 if (isSpeech == False):
-                	silenceRun = silenceRun + 1
+                    silenceRun = silenceRun + 1
                 else:
-					detectedSpeech = True
-					silenceRun = 0
-					numSilenceRuns = numSilenceRuns + 1
+                    detectedSpeech = True
+                    silenceRun = 0
+                    numSilenceRuns = numSilenceRuns + 1
 
         # only count silence runs after the first one 
         # (allow user to speak for total of max recording length if they haven't said anything yet)
         if (numSilenceRuns != 0) and ((silenceRun * VAD_FRAME_MS) > VAD_SILENCE_TIMEOUT):
-			thresholdSilenceMet = True
-			lastSilenceThresholdMet = time.time() - start
-	
-	if debug:
-		elapsed = time.time() - start
-		print "Recording length:", elapsed
-		print "Last silence threshold met:", lastSilenceThresholdMet
-		print "numSilenceRuns:", numSilenceRuns
-		print "Detected speech:", detectedSpeech
+            thresholdSilenceMet = True
+            lastSilenceThresholdMet = time.time() - start
+    
+    if debug:
+        elapsed = time.time() - start
+        print "Recording length:", elapsed
+        print "Last silence threshold met:", lastSilenceThresholdMet
+        print "numSilenceRuns:", numSilenceRuns
+        print "Detected speech:", detectedSpeech
 
-	rf = open(filename, 'w')
-	rf.write(audio)
-	rf.close()
-	inp.close()
+    rf = open(filename, 'w')
+    rf.write(audio)
+    rf.close()
+    inp.close()
 
-	if debug: print "Finished recording"
-		
+    if debug: print "Finished recording"
+        
 if __name__ == "__main__":
-	snowboy_start()
-	record("recording.wav")
+    snowboy_start()
+    record("recording.wav")
 
-	print "To test recording, execute:\n\naplay -r {} -c {} -f {} {}\n".format(
-			VAD_SAMPLERATE, VAD_CHANNELS, "S16_LE", speech_filename)
+    print "To test recording, execute:\n\naplay -r {} -c {} -f {} {}\n".format(
+            VAD_SAMPLERATE, VAD_CHANNELS, "S16_LE", speech_filename)
 
