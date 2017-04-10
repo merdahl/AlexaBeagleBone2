@@ -83,7 +83,7 @@ because this will be used on Yocto builds too.
 
 Note: must be done with root permissions, or will fail
 
-
+    $ wget https://bootstrap.pypa.io/get-pip.py
     $ sudo python ./get-pip.py
 
     Collecting pip
