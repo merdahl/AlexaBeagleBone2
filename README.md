@@ -65,7 +65,7 @@ memory caching system. It is often used to speed up dynamic database-driven
 websites by caching data and objects in RAM to reduce the number of times an
 external data source (such as a database or API) must be read.
 
-    $ sudo apt-get install python-memcached
+    $ sudo apt-get install memcached
 
 Mplayer used for basic mp3 playback
 
@@ -113,7 +113,7 @@ Install Python package wrapper dependencies
     alsaaudio
     memcached
 
-    $ sudo pip install pyalsaaudio memcached
+    $ sudo pip install pyalsaaudio python-memcached webrtcvad
 
 ## Optional Voice Triggering
 
