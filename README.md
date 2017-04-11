@@ -238,7 +238,7 @@ my /etc/asound.conf settings:
 	ctl.!default {
 	    type hw
 	    card 1
-	}
+	}	
 ```
 
 Old settings for external USB audio card (or your card can handle mixing):
@@ -253,6 +253,84 @@ Old settings for external USB audio card (or your card can handle mixing):
 	    type hw
 	    card 1
 	}
+```
+
+## alsamixer ##
+
+You may get better results tweaking the microphone settings on your system.  Strike a good
+balance between reliable detection of the trigger word/ phrase and false detection.  This
+will be likely specific to the audio capture device and mic used.
+
+To save your settings:
+
+```
+    ~ $ sudo alsactl store
+```
+
+### Playback settings ###
+
+You may wish to mute the microphone in the playback stream (notice 'MM' buried just above the mic gain)
+
+```
+lqqqqqqqqqqqqqqqqqqqqqqqqqqqqq AlsaMixer v1.0.28 qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqk
+x Card: USB Audio Device                               F1:  Help               x
+x Chip: USB Mixer                                      F2:  System information x
+x View: F3:[Playback] F4: Capture  F5: All             F6:  Select sound card  x
+x Item: Speaker [dB gain: -30.00, -30.00]              Esc: Exit               x
+x                                                                              x
+x                  lqqk               lqqk                                     x
+x                  x  x               x  x                                     x
+x                  x  x               x  x                                     x
+x                  x  x               x  x                                     x
+x                  x  x               x  x                                     x
+x                  x  x               x  x                                     x
+x                  x  x               x  x                                     x
+x                  x  x               x  x                                     x
+x                  x  x               xaax                                     x
+x                  x  x               xaax                                     x
+x                  x  x               xaax                                     x
+x                  xaax               xaax                                     x
+x                  tqqu               tqqu               lqqk                  x
+x                  xOOx               xMMx               xOOx                  x
+x                  mqqj               mqqj               mqqj                  x
+x                 10<>10               37                                      x
+x          <     Speaker      >       Mic         Auto Gain Control            x
+mqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqj
+```
+
+### Capture settings ###
+
+Notice on the capture tab the mic is not muted.  Some terminal programs will not
+switch tabs using the function keys.  Use TAB instead.
+
+As mentioned previously, adjust the mic volume to strike a balance between reliable
+and false detection.
+
+```
+lqqqqqqqqqqqqqqqqqqqqqqqqqqqqq AlsaMixer v1.0.28 qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqk
+x Card: USB Audio Device                               F1:  Help               x
+x Chip: USB Mixer                                      F2:  System information x
+x View: F3: Playback  F4:[Capture] F5: All             F6:  Select sound card  x
+x Item: Mic [dB gain: 18.00]                           Esc: Exit               x
+x                                                                              x
+x                                     lqqk                                     x
+x                                     x  x                                     x
+x                                     x  x                                     x
+x                                     x  x                                     x
+x                                     xaax                                     x
+x                                     xaax                                     x
+x                                     xaax                                     x
+x                                     xaax                                     x
+x                                     xaax                                     x
+x                                     xaax                                     x
+x                                     xaax                                     x
+x                                     xaax                                     x
+x                                    LmqqjR                                    x
+x                                   CAPTURE                                    x
+x                                      76                                      x
+x                                  <  Mic   >                                  x
+x                                                                              x
+mqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqj
 ```
 
 # Instructions and Usage
