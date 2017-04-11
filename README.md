@@ -109,11 +109,13 @@ Update PIP
 
 
 
-Install Python package wrapper dependencies
-    alsaaudio
-    memcached
+Install Python package dependencies
+    pyalsaaudio
+    python-memcached
+    webrtcvad
+    cherrypy
 
-    $ sudo pip install pyalsaaudio python-memcached webrtcvad
+    $ sudo pip install pyalsaaudio python-memcached webrtcvad cherrypy
 
 ## Optional Voice Triggering
 
