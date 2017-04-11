@@ -83,7 +83,7 @@ because this will be used on Yocto builds too.
 
 Note: must be done with root permissions, or will fail
 
-
+    $ wget https://bootstrap.pypa.io/get-pip.py
     $ sudo python ./get-pip.py
 
     Collecting pip
@@ -109,11 +109,13 @@ Update PIP
 
 
 
-Install Python package wrapper dependencies
-    alsaaudio
-    memcached
+Install Python package dependencies
+    pyalsaaudio
+    python-memcached
+    webrtcvad
+    cherrypy
 
-    $ sudo pip install pyalsaaudio memcached
+    $ sudo pip install pyalsaaudio python-memcached webrtcvad cherrypy
 
 ## Optional Voice Triggering
 
