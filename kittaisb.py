@@ -37,7 +37,7 @@ def snowboy_interrupt_check():
     return triggered
 
 def snowboy_start():
-    detector = snowboydecoder.HotwordDetector("./resources/HeyBuddy.pmdl",
+    detector = snowboydecoder.HotwordDetector("./resources/alexa.umdl",
             sensitivity=0.5, audio_gain=1)
     
     '''
