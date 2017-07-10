@@ -154,6 +154,7 @@ Included are three models:
     "Alexa"
     "Snowboy"
 
+"Alexa" is the default.
 
 ### Pocket Sphinx
 
