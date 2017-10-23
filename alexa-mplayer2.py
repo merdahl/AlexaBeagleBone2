@@ -3,7 +3,9 @@
 print "Loading modules"
 #import alsabuttonrecord
 #import voicetrigger
-import kittaisb
+#import kittaisb
+import edgetrigger
+import bbusrled
 import json
 import os
 import pymplb
@@ -418,9 +420,13 @@ if __name__ == '__main__':
         spawn_streaming_audio_maintainer_thread()
         while(appRunning):
             recording = path+'recording.wav'
-            kittaisb.snowboy_start()  # block here until triggered
-            kittaisb.record(recording)
+            #kittaisb.snowboy_start()  # block here until triggered
+            #kittaisb.record(recording)
             #voicetrigger.voice_trigger_record(recording)
             #alsabuttonrecord.record(recording)
-
+            edgetrigger.edgetrigger_start() # block here until active HIGH
+            bbusrled.userled_sweep()
+            edgetrigger.record(recording)
+            bbusrled.userled_startScan()
             alexa(recording)
+	    bbusrled.userled_stopScan()
